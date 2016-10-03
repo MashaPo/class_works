@@ -1,13 +1,9 @@
 
 inpt = input('введите слово\n')    
-count = 0
 word = ''
-for letter in inpt:
-    if count%2 == 0:
-        word = word + 'Б'
-        count += 1
+for number,letter in enumerate(inpt):
+    if number%2 == 0:
+        word += 'Б'
     else:
         word += letter
-        count += 1
 print(word)
-            
