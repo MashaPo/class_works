@@ -23,7 +23,6 @@ for c in list2:
         print("1 you're not speaking banana language!")
         still_banana == False
         break
-
 if still_banana == True:
     print('This is banana')
         
