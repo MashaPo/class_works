@@ -5,7 +5,6 @@ def ReadingFile (name):
     file = open( name,'r', encoding = 'utf-8')
     text = file.read()
     words = re.split(reg, text)
-    print(len(words))
     return words
 
 #пишем в словарь пары омографов из файла
@@ -41,8 +40,6 @@ def FindingErrorsInText (words, omographsList):
             else:
                 replacement = ReplaceWithCyrillic(word, omographsList)
                 dct_of_errors[count] = [word, replacement]
-    print(count)
-    print(len(dct_of_errors))
     return dct_of_errors
     
 
