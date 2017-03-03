@@ -28,9 +28,6 @@ f = open('1.json', 'w',  encoding = 'utf-8')
 json.dump(texts, f, indent = 2, ensure_ascii = False)
 
 
-for file in texts:
-    common = 
-
 #import json
 #f = open(1.json, 'w',  encoding = 'utf-8')
 #записываем json на диск. в файл f
