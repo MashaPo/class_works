@@ -83,7 +83,7 @@ def addToCorpus(text,filename):
         f.write(text)
 
 def main():
-    table = open('meta.csv', 'r', encoding='utf-8')
+    table = open('meta.csv', 'w', encoding='utf-8')
     table.write("path\tauthor\tdate\tlabel\tsource\ttitle\turl\twordcount")
     for id in range(53486,78150):
         url = urlGenerator(id)
