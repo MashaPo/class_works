@@ -36,7 +36,7 @@ def writingStatistics(handler, chat_statistics):  # пишем в файл ст�
 
 def main():
     csv_chat = open('chat.csv', 'w', encoding = 'utf-8')
-    csv_chat.write("message_id\tmessage\tmessage_length\tauthor_id")
+    csv_chat.write("message_id\tmessage_length\tauthor_id")
     csv_statistics = open('chat_statistics.csv', 'w', encoding='utf-8')
     csv_statistics.write("user_id\twords_count")
     token = log_pass.my_access_token
