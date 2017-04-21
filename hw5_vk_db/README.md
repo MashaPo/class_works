@@ -1,21 +1,22 @@
-## https://vk.com/obrazovach
+## downloading https://vk.com/obrazovach to db
 [obrazovach_database](https://yadi.sk/d/IzRxDgrq3HEAF5)
-- **posts** :
-***pid*** = post id (primary key)
-text = post text
-ccount = comments count
-from_id = community id
+ 
+- **posts**
+
+| **pid** | text      | ccount         | from_id      |
+|---------|-----------|----------------|--------------|
+| post id | post text | comments count | community id |
+
 
 - **comments**:
-***cid*** = comment id (primary key)
-text = comment text
-pid = post id,
-from_id = author id
-reply_to_cid = id of the comment our comment replies to
+
+| **cid**   | text         | pid     | from_id   | reply_to_cid                            |
+|-----------|--------------|---------|-----------|-----------------------------------------|
+| comment id| comment text | post id | author id | id of the comment our comment replies to|
+
 
 - **authors**:
-***uid*** = user id  (primary key)
-bdate = date of birth
-city = city name
 
-
+| **uid** | bdate         | city      |
+|---------|---------------|-----------|
+| user id | date of birth | city name |
