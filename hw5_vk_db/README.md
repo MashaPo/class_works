@@ -10,9 +10,9 @@
 
 - **comments**:
 
-| **cid**   | text         | pid     | from_id   | reply_to_cid                            |
-|-----------|--------------|---------|-----------|-----------------------------------------|
-| comment id| comment text | post id | author id | id of the comment our comment replies to|
+| **cid**   | text         | pid     | from_id | reply_to_cid                            |
+|-----------|--------------|---------|---------|-----------------------------------------|
+| comment id| comment text | post id | user id | id of the comment our comment replies to|
 
 
 - **authors**:
