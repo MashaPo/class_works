@@ -1,6 +1,6 @@
 import sqlite3
 import urllib.request, json
-from datetime import datetime
+#from datetime import datetime
 
 '''posts:
 pid = post id (key)
@@ -24,7 +24,7 @@ city = city name
 def tablesCreation(cur):
     cur.execute('create table posts(pid INTEGER not null primary key, text VARCHAR(100), ccount INTEGER, from_id INTEGER)')
     cur.execute('create table comments(cid INTEGER not null primary key, text VARCHAR(100), pid INTEGER, from_id INTEGER, reply_to_cid INTEGER)')
-    cur.execute('create table authors(uid INTEGER not null primary key, bdate INTEGER, city VARCHAR(100))')
+    cur.execute('create table authors(uid INTEGER not null primary key, bdate VARCHAR(100), city VARCHAR(100))')
 
 # выкачиваем все посты и комменты сообщества Образовач
 def postUrlCreator(offset): #запрос для получения постов
@@ -96,7 +96,7 @@ def debugComments(id, text, author, city, bdate):
 def main():
     con = sqlite3.connect('vk_db.db')
     cur = con.cursor()
-    #tablesCreation(cur)
+    tablesCreation(cur)
     offset = 0
     url = postUrlCreator(offset)
     posts_count = getPostsCount( getJsonData(url))
@@ -105,49 +105,59 @@ def main():
         posts = getContent(getJsonData(url))
         for post in posts:
             post_id = post['id']
-            text = post['text'].replace('<br>',' ')
+            text = post['text'].replace('<br>',' ').replace('"', '""')
             comments_count = post['comments']['count']
             from_id = post['from_id']
             if text: # пропускаем посты без текста
                 debugPosts( post_id, text)
                 #заносим в таблицу инфу по посту
-                cur.execute('insert into posts(pid, text, ccount, from_id) values(' \
-                            + str(post_id) +', ' + text +', ' + str(comments_count) + ', ' + str(from_id) + ')')
+                req = 'insert into posts(pid, text, ccount, from_id) values(' \
+                        + str(post_id) +', "' + text +'", ' + str(comments_count) + ', ' + str(from_id) + ')'
+                #print(req)
+                cur.execute(req)
                 con.commit()
-                cur.execute('select * from posts')
-                print(cur.fetchall())
                 if comments_count > 0: #сразу записываем комментарии, если есть
                     comm_offset = 0
                     while comm_offset < comments_count:
                         url = commentsUrlCreator(post_id, comm_offset)
                         comments = getContent(getJsonData(url))
                         for comment in comments:
-                            comment_text = comment['text'].replace('<br>', ' ')
+                            comment_text = comment['text'].replace('<br>', ' ').replace('"', '""')
                             comment_id = comment['cid']
                             author_id = comment['uid']
-                            reply_to_cid = comment['reply_to_cid']
+                            try:
+                                reply_to_cid = comment['reply_to_cid']
+                            except:
+                                reply_to_cid = 0
                             user_url =  UserUrlCreator(author_id)
                             city,bdate = getUserInfo(getJsonData( user_url))
-                            debugComments(comment_id, comment_text,author_id, city, bdate)
-                            cur.execute('insert into comments(cid, text, pid, from_id, reply_to_cid) values (' + \
-                                        str(comment_id) + ', ' + comment_text + ', ' + str(post_id) + \
-                                        ', ' + str(author_id) +  ', ' + str(reply_to_cid) + ')')
+                            #debugComments(comment_id, comment_text,author_id, city, bdate)
+                            req = 'insert into comments(cid, text, pid, from_id, reply_to_cid) values (' + \
+                                    str(comment_id) + ', "' + comment_text + '", ' + str(post_id) + \
+                                    ', ' + str(author_id) +  ', ' + str(reply_to_cid) + ')'
+                            cur.execute(req)
+                            #print(req)
                             con.commit()
                             #авторы могут повторяться, проверяем, есть ли они уже
                             req = 'select uid from authors where uid=' + str(author_id)
+                            #print(req)
                             cur.execute(req)
-                            author_id = cur.fetchall()
-                            if not author_id:
-                                cur.execute('insert into authors(uid, bdate, city)values (' + \
-                                            str(author_id) + ', ' + str(bdate) +  ', ' + str(city) + ')')
+                            allready_author = cur.fetchall()
+                            if not allready_author:
+                                req = 'insert into authors(uid, bdate, city)values (' + \
+                                        str(author_id) + ', "' + str(bdate) +  '", "' + str(city) + '")'
+                                #print(req)
+                                cur.execute(req)
                                 con.commit()
-
-                            cur.execute('select * from comments')
-                            print(cur.fetchall())
-                            cur.execute('select * from authors')
-                            print(cur.fetchall())
                         comm_offset += 100
         offset += 100
+
+    cur.execute('select * from posts limit 100')
+    print(cur.fetchall())
+    cur.execute('select * from comments limit 100')
+    print(cur.fetchall())
+    cur.execute('select * from authors limit 100')
+    print(cur.fetchall())
 
 
 if __name__ == '__main__':
