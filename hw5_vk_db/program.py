@@ -19,11 +19,6 @@ authors:
 uid = user id (key),
 bdate = date of birth,
 city = city name
-
-cities:
-cityId
-cityName
-
 '''
 
 def tablesCreation(cur):
@@ -85,28 +80,23 @@ def getUserInfo(data):
     return(city_name,bdate)
 
 
-def writingCsvPosts(id,text): #пишем в файл данные по постам
+def debugPosts(id,text):
     print(id)
     print(text)
-    #handler.write('\n%s\t%s' % (id, len(text.split(' '))))
-    #handler.flush()
 
-def writingCsvComments(id, text, author, city, age):  # пишем в файл данные пользователей
+
+def debugComments(id, text, author, city, bdate):
     print(id)
     print(text)
     print(author)
     print(city)
-    print(age)
-    #handler.write('\n%s\t%s\t%s\t%s\t%s' % (id, len(text.split(' ')), author, str(city), str(age)))
+    print(bdate)
+
 
 def main():
     con = sqlite3.connect('vk_db.db')
     cur = con.cursor()
-    tablesCreation(cur)
-    csv_posts = open('posts.csv', 'w', encoding = 'utf-8')
-    csv_posts.write("post_id\tpost_length")
-    csv_comments = open('comments.csv', 'w', encoding='utf-8')
-    csv_comments.write("comment_id\tcomment_length\tauthor\tcity\tage")
+    #tablesCreation(cur)
     offset = 0
     url = postUrlCreator(offset)
     posts_count = getPostsCount( getJsonData(url))
@@ -117,9 +107,9 @@ def main():
             post_id = post['id']
             text = post['text'].replace('<br>',' ')
             comments_count = post['comments']['count']
-            from_id = post['comments']['from_id']
+            from_id = post['from_id']
             if text: # пропускаем посты без текста
-                writingCsvPosts( post_id, text)
+                debugPosts( post_id, text)
                 #заносим в таблицу инфу по посту
                 cur.execute('insert into posts(pid, text, ccount, from_id) values(' \
                             + str(post_id) +', ' + text +', ' + str(comments_count) + ', ' + str(from_id) + ')')
@@ -138,7 +128,7 @@ def main():
                             reply_to_cid = comment['reply_to_cid']
                             user_url =  UserUrlCreator(author_id)
                             city,bdate = getUserInfo(getJsonData( user_url))
-                            writingCsvComments(comment_id, comment_text,author_id, city, bdate)
+                            debugComments(comment_id, comment_text,author_id, city, bdate)
                             cur.execute('insert into comments(cid, text, pid, from_id, reply_to_cid) values (' + \
                                         str(comment_id) + ', ' + comment_text + ', ' + str(post_id) + \
                                         ', ' + str(author_id) +  ', ' + str(reply_to_cid) + ')')
