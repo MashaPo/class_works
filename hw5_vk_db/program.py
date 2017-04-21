@@ -100,7 +100,7 @@ def main():
     offset = 0
     url = postUrlCreator(offset)
     posts_count = getPostsCount( getJsonData(url))
-    while offset < 300: #обходим все посты на стене шагом 100
+    while offset < posts_count: #обходим все посты на стене шагом 100
         url = postUrlCreator(offset)
         posts = getContent(getJsonData(url))
         for post in posts:
