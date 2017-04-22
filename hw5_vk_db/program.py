@@ -79,20 +79,6 @@ def getUserInfo(data):
         bdate = 0
     return(city_name,bdate)
 
-
-def debugPosts(id,text):
-    print(id)
-    print(text)
-
-
-def debugComments(id, text, author, city, bdate):
-    print(id)
-    print(text)
-    print(author)
-    print(city)
-    print(bdate)
-
-
 def main():
     con = sqlite3.connect('vk_db.db')
     cur = con.cursor()
@@ -109,7 +95,6 @@ def main():
             comments_count = post['comments']['count']
             from_id = post['from_id']
             if text: # пропускаем посты без текста
-                debugPosts( post_id, text)
                 #заносим в таблицу инфу по посту
                 req = 'insert into posts(pid, text, ccount, from_id) values(' \
                         + str(post_id) +', "' + text +'", ' + str(comments_count) + ', ' + str(from_id) + ')'
@@ -131,7 +116,6 @@ def main():
                                 reply_to_cid = 0
                             user_url =  UserUrlCreator(author_id)
                             city,bdate = getUserInfo(getJsonData( user_url))
-                            #debugComments(comment_id, comment_text,author_id, city, bdate)
                             req = 'insert into comments(cid, text, pid, from_id, reply_to_cid) values (' + \
                                     str(comment_id) + ', "' + comment_text + '", ' + str(post_id) + \
                                     ', ' + str(author_id) +  ', ' + str(reply_to_cid) + ')'
@@ -152,13 +136,23 @@ def main():
                         comm_offset += 100
         offset += 100
 
+def test():
+    con = sqlite3.connect('vk_db.db')
+    cur = con.cursor()
     cur.execute('select * from posts limit 100')
     print(cur.fetchall())
     cur.execute('select * from comments limit 100')
     print(cur.fetchall())
     cur.execute('select * from authors limit 100')
     print(cur.fetchall())
+    cur.execute('select count(*) from posts')
+    print(cur.fetchall())
+    cur.execute('select count(*) from comments')
+    print(cur.fetchall())
+    cur.execute('select count(*) from authors')
+    print(cur.fetchall())
 
 
 if __name__ == '__main__':
         main()
+
