@@ -39,18 +39,19 @@ def graph_about():
     nodes = []
     for node in sorted(deg, key=deg.get, reverse=True):
         nodes.append(node)
-    print('top central nodes: {}'.format(' '.join(nodes[:20])))
+    #print('top central nodes: {}'.format(' '.join(nodes[:20])))
     sub_G = G.subgraph(nodes[:50])#визуализируем центральные узлы и их связи
-    visualize(sub_G)
-    visualize(G)
+    visualize(sub_G,'graph_top50.png')
+    visualize(G,'graph_total.png')
 
-def visualize(g):
+def visualize(g,name):
     pos = nx.spring_layout(g)
     nx.draw_networkx_nodes(g, pos, node_color='green', node_size=2)
     nx.draw_networkx_edges(g, pos, edge_color='grey')
     nx.draw_networkx_labels(g, pos, font_size=12, font_family='Arial')
     plt.axis('off')
-    plt.show()
+    plt.savefig(name)
+    #plt.show()
 
 def main():
     #разбираем все тексты в corpus, создается morph_corpus
