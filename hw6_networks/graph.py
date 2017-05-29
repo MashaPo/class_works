@@ -5,6 +5,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 G = nx.Graph()
+#G = nx.read_gexf('graph.gexf')
 VAL_POS = ["A","S","V","ADV"]
 
 def wordlist(file):
@@ -40,18 +41,19 @@ def graph_about():
     for node in sorted(deg, key=deg.get, reverse=True):
         nodes.append(node)
     #print('top central nodes: {}'.format(' '.join(nodes[:20])))
-    sub_G = G.subgraph(nodes[:50])#визуализируем центральные узлы и их связи
-    visualize(sub_G,'graph_top50.png')
+    sub_G = G.subgraph(nodes[:30])#визуализируем центральные узлы и их связи
+    visualize(sub_G,'graph_top30.png')
     visualize(G,'graph_total.png')
 
 def visualize(g,name):
-    pos = nx.spring_layout(g)
+    pos = nx.random_layout(g)
     nx.draw_networkx_nodes(g, pos, node_color='green', node_size=2)
     nx.draw_networkx_edges(g, pos, edge_color='grey')
     nx.draw_networkx_labels(g, pos, font_size=12, font_family='Arial')
     plt.axis('off')
     plt.savefig(name)
     #plt.show()
+
 
 def main():
     #разбираем все тексты в corpus, создается morph_corpus
