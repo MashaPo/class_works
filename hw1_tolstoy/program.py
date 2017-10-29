@@ -2,7 +2,7 @@
 def ReadingFile (name):
     import re
     reg = "[<>\.\s,]"
-    file = open( name,'r', encoding = 'utf-8')
+    file = open(name, 'r', encoding = 'utf-8')
     text = file.read()
     words = re.split(reg, text)
     return words
