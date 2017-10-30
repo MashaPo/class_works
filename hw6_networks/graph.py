@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 G = nx.Graph()
 #G = nx.read_gexf('graph.gexf')
-VAL_POS = ["A","S","V","ADV"]
+VAL_POS = ["A", "S", "V", "ADV"]
 
 def wordlist(file):
     wordlist = []
@@ -47,9 +47,9 @@ def graph_about():
 
 def visualize(g,name):
     pos = nx.random_layout(g)
-    nx.draw_networkx_nodes(g, pos, node_color='green', node_size=2)
-    nx.draw_networkx_edges(g, pos, edge_color='grey')
-    nx.draw_networkx_labels(g, pos, font_size=12, font_family='Arial')
+    nx.draw_networkx_nodes(g, pos, node_color='grey', node_size=2)
+    nx.draw_networkx_edges(g, pos, edge_color='green')
+    nx.draw_networkx_labels(g, pos, font_size=8, font_family='Arial')
     plt.axis('off')
     plt.savefig(name)
     #plt.show()
