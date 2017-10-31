@@ -24,5 +24,5 @@ for c in list2:
         still_banana == False
         break
 if still_banana == True:
-    print('This is banana')
+    print('This is a real banana')
         
